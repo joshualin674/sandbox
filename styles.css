@@ -37,7 +37,7 @@
     width: 100%;
     height: calc(100%); /* Keep this unchanged */
     background: url('sandback.png') repeat center top; /* Repeat pattern both horizontally and vertically */
-    background-size: 300px 300px; /* Specifies a fixed size for each tile */
+    background-size: 500px 500px; /* Specifies a fixed size for each tile */
 
     
   }
