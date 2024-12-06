@@ -123,3 +123,19 @@ nav a:hover {
   grid-row: 3 / 4;
   background-color: white;
 }
+
+/* Logo */
+.logo {
+  grid-column: 1 / 4;
+  grid-row: 1 / 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
