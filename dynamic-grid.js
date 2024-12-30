@@ -1,5 +1,19 @@
 const container = document.querySelector('.grid-container');
 
+/** 
+ * Debounce function to limit the rate at which a function can fire.
+ * @param {Function} func - The function to debounce.
+ * @param {number} wait - The delay in milliseconds.
+ * @returns {Function} - A debounced version of the input function.
+ */
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
 function updateGrid() {
   container.innerHTML = '';
 
@@ -33,6 +47,10 @@ function updateGrid() {
   for (let i = 0; i < totalSquares; i++) {
     const square = document.createElement('div');
     square.classList.add('grid-square');
+
+    // Assign a random white_sand image (white_sand1.png to white_sand9.png)
+    const imgNumber = randomInt(1, 10); // Generates a number between 1 and 9 inclusive
+    square.style.backgroundImage = `url('white_sand${imgNumber}.png')`;
 
     // "s, a, n, d" in the first row
     if (i === 0) {
@@ -436,6 +454,11 @@ function shuffleArray(arr) {
   }
 }
 
-// Listen for resize and initialize
-window.addEventListener('resize', updateGrid);
+// Create a debounced version of updateGrid with a 200ms delay
+const debouncedUpdateGrid = debounce(updateGrid, 200);
+
+// Listen for resize events and apply the debounced update
+window.addEventListener('resize', debouncedUpdateGrid);
+
+// Initialize the grid on page load
 updateGrid();
