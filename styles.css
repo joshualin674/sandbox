@@ -1,141 +1,127 @@
+/* Reset and body styles */
 body {
   margin: 0;
   background-color: black;
   font-family: Arial, sans-serif;
-  overflow: hidden;
+  overflow: auto; /* Allow scrolling */
 }
 
-/* Navigation bar */
+/* Navigation bar styles */
 nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgb(243, 243, 0); /* Original yellow color */
+  color: black;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  background-color: yellow;
-  padding: 10px 20px;
+  padding: 1rem 0; /* Adjust padding for better spacing */
+  font-weight: bold;
+  font-style: italic; /* Italics added back */
+  z-index: 1000; /* Ensure it stays above other elements */
 }
 
 nav a {
   color: black;
   text-decoration: none;
   font-size: 18px;
-  font-weight: bold;
-  font-style: italic; /* Added to italicize the text */
   text-transform: lowercase;
+  font-style: italic; /* Italics added back */
+  transition: text-decoration 0.2s ease;
 }
 
 nav a:hover {
   text-decoration: underline;
 }
 
-/* Grid overlay */
+/* Grid overlay styles */
 .grid-overlay {
-  position: relative;
-  width: 80%; /* Adjust width to center the grid */
-  height: 80%; /* Adjust height to center the grid */
-  margin: 0 auto;
-  background-color: black;
-  border: 2px solid black; /* Black border around the grid */
   display: flex;
   justify-content: center;
-  align-items: center;
-  box-sizing: border-box; /* Ensures padding is accounted for */
-  padding: 20px; /* Creates space inside the border */
-}
-
-/* Grid container */
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(6, 1fr);
-  gap: 10px;
-  width: 100%; /* Grid fits within the padding */
-  height: 100%; /* Grid fits within the padding */
-  position: relative;
-  background-image: 
-    linear-gradient(transparent 95%, rgba(255, 255, 255, 0.1) 95%),
-    linear-gradient(90deg, transparent 95%, rgba(255, 255, 255, 0.1) 95%);
-  background-size: 60px 60px; /* Adjust grid spacing */
-  z-index: 1; /* Ensure elements overlay the background */
-}
-
-/* Sandbox logo */
-.logo {
-  grid-column: 1 / 4;
-  grid-row: 1 / 3;
-  color: white;
-  font-size: 36px;
-  text-transform: lowercase;
-  display: flex;
-  flex-direction: column;
   align-items: flex-start;
+  width: 100vw;
+  padding: 100px 0; /* Space around the grid */
 }
 
-.logo span:nth-child(1) {
+/* Each grid square styles */
+.grid-square {
+  /* Remove background-color: black; to allow background-image to show */
+  /* background-color: black; */ /* Removed */
+
+  /* Set the white_sand.png as the background image */
+  background-image: url('white_sand.png');
+  background-size: cover; /* Ensures the image covers the entire square */
+  background-position: center; /* Default position; overridden by JavaScript */
+  background-repeat: no-repeat;
+
+  border: 1px solid rgba(255, 255, 255, 0.779); /* Thinner lines with ~78% opacity */
+  box-sizing: border-box;
+  text-align: center;
+  line-height: 50px; /* Match grid-auto-rows for vertical centering */
+  font-size: 18px;
+  color: white;
+
+  /* Ensure the grid-square is positioned relative for any absolute children */
+  position: relative;
+}
+
+/* Hidden squares */
+.grid-square.hidden {
+  display: none; /* Completely removes the element from the layout */
+  /* Alternatively, use visibility: hidden; if you want to keep the space */
+  /* visibility: hidden; */
+}
+
+/* Grid container styles */
+.grid-container {
+  position: relative;
+  display: grid;
+  width: 80%;
+  grid-auto-rows: 50px; /* Each row is 50px tall */
+  background-color: black;
+  margin-bottom: 0;
+  /* Additional grid properties are handled via JavaScript */
+}
+
+/* The "image" portion (top 5x5) */
+.article-image {
+  background-image: url("https://via.placeholder.com/400x400"); /* Or your own image URL */
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #fff; /* Optional white border */
+  z-index: 2; /* Appear above squares */
+  /* Ensure it spans the correct grid area via JavaScript */
+}
+
+/* The black rectangle portion (2x3) for text */
+/* Textbox part: 3 wide x 2 tall */
+.article-text {
   background-color: black;
   color: white;
-}
-
-.logo span:nth-child(2) {
-  color: black;
-  background-color: white;
-  padding: 0 5px;
-}
-
-/* Shapes */
-.shape {
-  position: absolute;
-  background: none;
-}
-
-.triangle-left {
-  grid-column: 3 / 6;
-  grid-row: 3 / 5;
-  clip-path: polygon(100% 0, 0 50%, 100% 100%);
-  background-color: yellow;
-  opacity: 0.7;
-}
-
-.triangle-right {
-  grid-column: 4 / 8;
-  grid-row: 3 / 5;
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
-  background-color: yellow;
-}
-
-.circle {
-  grid-column: 8 / 10;
-  grid-row: 2 / 4;
-  width: 100%;
-  height: 100%;
-  background-color: gray;
-  border-radius: 50%;
-  opacity: 0.7;
-}
-
-.square {
-  grid-column: 10 / 12;
-  grid-row: 4 / 5;
-  background-color: lightblue;
-}
-
-.rectangle {
-  grid-column: 11 / 12;
-  grid-row: 3 / 4;
-  background-color: white;
-}
-
-/* Logo */
-.logo {
-  grid-column: 1 / 4;
-  grid-row: 1 / 3;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid #667; /* Optional subtle border */
+  z-index: 2; /* Ensure it appears above squares */
+  /* Ensure it spans the correct grid area via JavaScript */
 }
 
-.logo img {
-  max-width: 100%;
-  height: auto;
-  display: block;
+/* Add blank space underneath the grid */
+.blank-space {
+  height: 50px; /* Define the height of the blank space */
+  background-color: black; /* Match the background color */
 }
 
+/* Placeholder image styles */
+.placeholder-image {
+  background-image: url("https://via.placeholder.com/300x200"); /* Any placeholder URL */
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #fff; /* Optional styling */
+  z-index: 2; /* Ensure placeholders appear above squares */
+  /* Ensure it spans the correct grid area via JavaScript */
+}
