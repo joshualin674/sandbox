@@ -1,18 +1,28 @@
+// Select the grid container
 const container = document.querySelector('.grid-container');
 
-/** 
- * Debounce function to limit the rate at which a function can fire.
- * @param {Function} func - The function to debounce.
- * @param {number} wait - The delay in milliseconds.
- * @returns {Function} - A debounced version of the input function.
+/**
+ * Jumping Fix:
+ * Track lastWidth so we only call updateGrid() if the width actually changes
+ * (ignoring minor vertical changes on mobile).
  */
-function debounce(func, wait) {
-  let timeout;
-  return function(...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
-  };
-}
+let lastWidth = window.innerWidth;
+window.addEventListener('resize', () => {
+  if (window.innerWidth !== lastWidth) {
+    lastWidth = window.innerWidth;
+    updateGrid();
+  }
+});
+
+// ====== 1) Article Texts: Add or change them here ======
+const articleTexts = {
+  1: "Article 1 content goes here...by Whomever Wrote Article 1",
+  2: "Hi from Article 2...by Article 2 Writer",
+  3: "Article 3 content...by Whomever Wrote It",
+  // ... add more articles as needed ...
+};
+// Initial call
+updateGrid();
 
 function updateGrid() {
   container.innerHTML = '';
@@ -21,36 +31,37 @@ function updateGrid() {
   const squareSize = 50;
   const columns = Math.floor(containerWidth / squareSize);
 
-  // Total squares adjusted for 432 + 12 = 444
+  // We have 444 total squares to place (432 base + 12 extra)
   const totalBaseSquares = 444;
 
-  // Determine number of rows based on column count
+  // 1) Determine number of rows
   let baseRows;
-  if (columns >= 20) {
+  if (columns > 20) {
     baseRows = Math.ceil(totalBaseSquares / columns);
-  } else if (columns > 11 && columns < 20) {
-    // Original rows: 29, increase by 1 to accommodate 12 extra squares
-    baseRows = 29 + 1; // 30 rows
-  } else { // columns <= 11
-    // Original rows: 36, increase by 2 to accommodate 12 extra squares (for 6 columns, 12/6=2)
-    // For columns <=11, ceil(12 / columns) = ceil(12/11)=2 to ceil(12/1)=12
-    baseRows = 36 + Math.ceil(12 / columns);
+  } else if (columns <= 11) {
+    baseRows = 36 + Math.ceil(12 / columns) + 4;
+    baseRows = Math.max(0, baseRows - 7);
+  } else {
+    baseRows = 30 + 4;
   }
 
-  const totalSquares = baseRows * columns + 12;
+  const totalSquares = baseRows * columns;
   const rows = baseRows;
 
   container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
   container.style.gridTemplateRows = `repeat(${rows}, ${squareSize}px)`;
 
-  // Create squares with "s, a, n, d, b, o, x" logic
+  // 2) Create base squares + random backgrounds
   for (let i = 0; i < totalSquares; i++) {
     const square = document.createElement('div');
     square.classList.add('grid-square');
 
-    // Assign a random white_sand image (white_sand1.png to white_sand9.png)
-    const imgNumber = randomInt(1, 10); // Generates a number between 1 and 9 inclusive
-    square.style.backgroundImage = `url('white_sand${imgNumber}.png')`;
+    // Random background from white_sand1..9
+    const randImgIndex = randomInt(1, 4); // 1..9
+    square.style.backgroundImage = `url("./blue_sand_opacity${randImgIndex}.png")`;
+    square.style.backgroundSize = 'cover';
+    square.style.backgroundRepeat = 'no-repeat';
+    square.style.backgroundPosition = 'center';
 
     // "s, a, n, d" in the first row
     if (i === 0) {
@@ -81,7 +92,7 @@ function updateGrid() {
       triangle.style.width = '100%';
       triangle.style.height = '100%';
       triangle.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%)';
-      triangle.style.backgroundColor = 'white';
+      triangle.style.backgroundColor = '#00AEEF';
       square.appendChild(triangle);
     }
     // "b, o, x" in the second row
@@ -103,205 +114,126 @@ function updateGrid() {
     container.appendChild(square);
   }
 
-  // Insert 3 articles based on the new responsive approach
-  createResponsiveArticles(columns, rows);
-}
-
-/** Style for the big letters ("s, a, n, d, b, o, x"). */
-function styleBigLetter(elem, size) {
-  elem.style.color = 'white';
-  elem.style.textAlign = 'center';
-  elem.style.fontSize = '33px';
-  elem.style.lineHeight = `${size}px`;
-}
-
-/** Decide which layout to use based on the number of columns. */
-function createResponsiveArticles(columns, rows) {
+  // 3) Decide article layout
   if (columns >= 20) {
-    // Horizontal layout with slight vertical randomness
     createHorizontalArticles(columns, rows);
-  } else if (columns > 11 && columns < 20) {
-    // Vertical formation with anchor at 5th or 6th row
-    createVerticalArticlesMedium(columns, rows);
-  } else { // columns <= 11
-    // Vertical formation with three square separation
+  } else {
     createVerticalArticlesSmall(columns, rows);
   }
 }
 
-/** HORIZONTAL layout:
- * - Place 3 articles horizontally with slight vertical randomness.
- */
+/** Horizontal layout for columns >= 20 */
 function createHorizontalArticles(columns, rows) {
   const articleWidth = 5;
   const articleHeight = 7;
-  const margin = 1;
-
   const totalArticles = 3;
-  const takenAreas = [];
 
-  for (let i = 0; i < totalArticles; i++) {
-    let placed = false;
-    const maxAttempts = 50;
-
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      const colStart = randomInt(0, columns - articleWidth + 1);
-      const baseRow = randomInt(0, rows - articleHeight + 1);
-      // Introduce slight vertical randomness
-      const rowStart = baseRow + randomInt(-2, 3); // ±2 squares
-
-      if (rowStart < 0 || rowStart + articleHeight > rows) continue;
-
-      if (!isValidPlacement(colStart, rowStart, articleWidth, articleHeight, columns, rows, takenAreas, margin)) {
-        continue;
-      }
-
-      // Place the article
-      appendArticle(colStart, rowStart);
-      removeSquaresInArea(colStart, colStart + articleWidth, rowStart, rowStart + articleHeight, columns);
-
-      takenAreas.push({
-        colStart,
-        colEnd: colStart + articleWidth,
-        rowStart,
-        rowEnd: rowStart + articleHeight
-      });
-
-      placed = true;
-      break;
-    }
-
-    if (!placed) {
-      console.warn(`Could not place horizontal article ${i + 1}`);
-    }
-  }
-}
-
-/** VERTICAL layout for 12-19 columns:
- * - One article anchored at 5th or 6th row, others beneath with one square separation.
- * - Horizontal positions vary randomly.
- */
-function createVerticalArticlesMedium(columns, rows) {
-  const articleWidth = 5;
-  const articleHeight = 7;
-  const margin = 1;
-  const separation = 1;
-
-  const totalArticles = 3;
-  const takenAreas = [];
-
-  // Anchor the first article at row 5 or 6 (0-based index: 4 or 5)
-  const anchorRows = [4, 5];
-  const anchorRow = anchorRows[randomInt(0, anchorRows.length)];
-
-  let placed = false;
-
-  for (let attempt = 0; attempt < 50; attempt++) {
-    const colStart = randomInt(0, columns - articleWidth + 1);
-    const rowStart = anchorRow;
-
-    if (rowStart + articleHeight > rows) continue;
-
-    if (!isValidPlacement(colStart, rowStart, articleWidth, articleHeight, columns, rows, takenAreas, margin)) {
-      continue;
-    }
-
-    // Place the anchored article
-    appendArticle(colStart, rowStart);
-    removeSquaresInArea(colStart, colStart + articleWidth, rowStart, rowStart + articleHeight, columns);
-
-    takenAreas.push({
-      colStart,
-      colEnd: colStart + articleWidth,
-      rowStart,
-      rowEnd: rowStart + articleHeight
-    });
-
-    placed = true;
-    break;
-  }
-
-  if (!placed) {
-    console.warn('Could not place anchored vertical article');
+  if (columns < 19) {
+    console.warn('Not enough columns for horizontal layout with spacing.');
     return;
   }
 
-  // Place the remaining two articles beneath with one square separation
-  let lastArea = takenAreas[takenAreas.length - 1];
-
-  for (let i = 0; i < totalArticles - 1; i++) {
-    placed = false;
-    const maxAttempts = 50;
-
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      // Allow horizontal randomness
-      const colStart = randomInt(0, columns - articleWidth + 1);
-      const rowStart = lastArea.rowEnd + separation;
-
-      if (rowStart + articleHeight > rows) continue;
-
-      if (!isValidPlacement(colStart, rowStart, articleWidth, articleHeight, columns, rows, takenAreas, margin)) {
-        continue;
-      }
-
-      // Place the article
-      appendArticle(colStart, rowStart);
-      removeSquaresInArea(colStart, colStart + articleWidth, rowStart, rowStart + articleHeight, columns);
-
-      takenAreas.push({
-        colStart,
-        colEnd: colStart + articleWidth,
-        rowStart,
-        rowEnd: rowStart + articleHeight
-      });
-
-      lastArea = takenAreas[takenAreas.length - 1];
-      placed = true;
-      break;
-    }
-
-    if (!placed) {
-      console.warn(`Could not place vertical article ${i + 2}`);
-    }
+  // Distribute leftover among 4 gaps
+  let gapLeft = 1,
+    gapBetween1 = 1,
+    gapBetween2 = 1,
+    gapRight = 1;
+  let leftover = columns - 3 * articleWidth - (gapLeft + gapBetween1 + gapBetween2 + gapRight);
+  const gaps = [gapLeft, gapBetween1, gapBetween2, gapRight];
+  while (leftover > 0) {
+    const idx = randomInt(0, gaps.length);
+    gaps[idx]++;
+    leftover--;
   }
+  [gapLeft, gapBetween1, gapBetween2, gapRight] = gaps;
+
+  const col1 = gapLeft;
+  const col2 = col1 + articleWidth + gapBetween1;
+  const col3 = col2 + articleWidth + gapBetween2;
+
+  let rowStart1 = randomInt(4, 8);
+  if (rowStart1 + articleHeight > rows) {
+    rowStart1 = Math.max(4, rows - articleHeight);
+  }
+
+  let row2Min = 2;
+  let row2Max = Math.max(row2Min, rows - articleHeight);
+  let rowStart2 = randomInt(row2Min, row2Max + 1);
+
+  let row3Min = 2;
+  let row3Max = Math.max(row3Min, rows - articleHeight);
+  let rowStart3 = randomInt(row3Min, row3Max + 1);
+
+  // Article #1 => some-article1.html
+  removeSquaresInArea(col1, col1 + articleWidth, rowStart1, rowStart1 + articleHeight, columns);
+  appendArticle(col1, rowStart1, 1, './some-article1.html');
+
+  // Article #2 => some-article2.html
+  removeSquaresInArea(col2, col2 + articleWidth, rowStart2, rowStart2 + articleHeight, columns);
+  appendArticle(col2, rowStart2, 2, './some-article2.html');
+
+  // Article #3 => some-article3.html
+  removeSquaresInArea(col3, col3 + articleWidth, rowStart3, rowStart3 + articleHeight, columns);
+  appendArticle(col3, rowStart3, 3, './some-article3.html');
 }
 
-/** VERTICAL layout for <=11 columns:
- * - Three articles stacked vertically with three square separation.
- * - Centered horizontally if possible.
- */
+/** Vertical layout for columns < 20 */
 function createVerticalArticlesSmall(columns, rows) {
   const articleWidth = 5;
   const articleHeight = 7;
   const margin = 1;
   const separation = 3;
-
   const totalArticles = 3;
   const takenAreas = [];
 
-  // Center horizontally if possible
-  let colStart = Math.floor((columns - articleWidth) / 2);
-  if (colStart < 0) colStart = 0;
-  if (colStart + articleWidth > columns) colStart = columns - articleWidth;
-  colStart = Math.max(0, colStart); // Ensure non-negative
+  function getRandomColStart() {
+    const minCol = 1;
+    const maxCol = columns - articleWidth - 1;
+    if (maxCol < minCol) {
+      return -1;
+    }
+    return randomInt(minCol, maxCol + 1);
+  }
 
-  // Anchor the first article at row 5 or 6 (0-based index: 4 or 5)
+  // columns < 11 => pinned row=4
+  if (columns < 11) {
+    let colStart = Math.floor((columns - articleWidth) / 2);
+    if (colStart < 0) colStart = 0;
+    if (colStart + articleWidth > columns) {
+      colStart = columns - articleWidth;
+    }
+    colStart = Math.max(0, colStart);
+
+    let rowStart = 4;
+    for (let i = 0; i < totalArticles; i++) {
+      if (rowStart + articleHeight > rows) {
+        console.warn(`Not enough rows for article #${i + 1} at row ${rowStart}.`);
+        break;
+      }
+      const linkTarget = `./some-article${i + 1}.html`;
+      appendArticle(colStart, rowStart, i + 1, linkTarget);
+      removeSquaresInArea(colStart, colStart + articleWidth, rowStart, rowStart + articleHeight, columns);
+      rowStart += articleHeight + separation;
+    }
+    return;
+  }
+
+  // 11..19 columns => stacked vertically, random horizontal offsets
   const anchorRows = [4, 5];
   const anchorRow = anchorRows[randomInt(0, anchorRows.length)];
 
-  let placed = false;
-
+  let placedFirst = false;
   for (let attempt = 0; attempt < 50; attempt++) {
     const rowStart = anchorRow + attempt;
-
     if (rowStart + articleHeight > rows) break;
+
+    const colStart = getRandomColStart();
+    if (colStart < 1) break;
 
     if (!isValidPlacement(colStart, rowStart, articleWidth, articleHeight, columns, rows, takenAreas, margin)) {
       continue;
     }
-
-    // Place the first article
-    appendArticle(colStart, rowStart);
+    appendArticle(colStart, rowStart, 1, './some-article1.html');
     removeSquaresInArea(colStart, colStart + articleWidth, rowStart, rowStart + articleHeight, columns);
 
     takenAreas.push({
@@ -311,28 +243,34 @@ function createVerticalArticlesSmall(columns, rows) {
       rowEnd: rowStart + articleHeight
     });
 
-    placed = true;
+    placedFirst = true;
     break;
   }
 
-  if (!placed) {
-    console.warn('Could not place first vertical article (small layout)');
+  if (!placedFirst) {
+    console.warn('Could not place first vertical article (columns 11–19).');
     return;
   }
 
-  // Place the remaining two articles with three square separation
   let lastArea = takenAreas[takenAreas.length - 1];
-
   for (let i = 0; i < totalArticles - 1; i++) {
-    placed = false;
+    let placed = false;
+    const rowStart = lastArea.rowEnd + separation;
+    if (rowStart + articleHeight > rows) {
+      console.warn(`Not enough vertical space for article #${i + 2}`);
+      break;
+    }
 
-    for (let rowStart = lastArea.rowEnd + separation; rowStart < rows - articleHeight; rowStart++) {
+    for (let attempt = 0; attempt < 50; attempt++) {
+      const colStart = getRandomColStart();
+      if (colStart < 1) break;
+
       if (!isValidPlacement(colStart, rowStart, articleWidth, articleHeight, columns, rows, takenAreas, margin)) {
         continue;
       }
-
-      // Place the article
-      appendArticle(colStart, rowStart);
+      const articleIndex = i + 2;
+      const linkTarget = `./some-article${articleIndex}.html`;
+      appendArticle(colStart, rowStart, articleIndex, linkTarget);
       removeSquaresInArea(colStart, colStart + articleWidth, rowStart, rowStart + articleHeight, columns);
 
       takenAreas.push({
@@ -348,57 +286,32 @@ function createVerticalArticlesSmall(columns, rows) {
     }
 
     if (!placed) {
-      console.warn(`Could not place vertical article ${i + 2} (small layout)`);
+      console.warn(`Could not place vertical article #${i + 2} (columns 11–19).`);
       break;
     }
   }
 }
 
-/** Check if a placement is valid based on existing taken areas and margins. */
+/** Check if a placement is valid */
 function isValidPlacement(colStart, rowStart, w, h, columns, rows, takenAreas, margin) {
   const colEnd = colStart + w;
   const rowEnd = rowStart + h;
   if (colEnd > columns || rowEnd > rows) return false;
-
-  // Skip top 2 rows
   if (rowStart < 2) return false;
 
-  // Skip row=2 and col<6 area
   const intersectsRow2 = (rowStart <= 2 && rowEnd > 2);
   const intersectsCols0to5 = (colStart < 6);
   if (intersectsRow2 && intersectsCols0to5) return false;
 
-  // Check margin-based overlaps
-  return !overlapsAnyAreaWithMargin(
-    colStart, colEnd,
-    rowStart, rowEnd,
-    takenAreas,
-    margin,
-    columns,
-    rows
-  );
+  return !overlapsAnyAreaWithMargin(colStart, colEnd, rowStart, rowEnd, takenAreas, margin, columns, rows);
 }
 
-/** Check if the new area overlaps with any taken area considering the margin. */
-function overlapsAnyAreaWithMargin(
-  colStart, colEnd,
-  rowStart, rowEnd,
-  takenAreas,
-  margin,
-  columns,
-  rows
-) {
+function overlapsAnyAreaWithMargin(colStart, colEnd, rowStart, rowEnd, takenAreas, margin, columns, rows) {
   for (const area of takenAreas) {
-    let aColStart = area.colStart - margin;
-    let aColEnd = area.colEnd + margin;
-    let aRowStart = area.rowStart - margin;
-    let aRowEnd = area.rowEnd + margin;
-
-    // Clamp to grid boundaries
-    aColStart = Math.max(0, aColStart);
-    aRowStart = Math.max(0, aRowStart);
-    aColEnd = Math.min(columns, aColEnd);
-    aRowEnd = Math.min(rows, aRowEnd);
+    let aColStart = Math.max(0, area.colStart - margin);
+    let aColEnd = Math.min(columns, area.colEnd + margin);
+    let aRowStart = Math.max(0, area.rowStart - margin);
+    let aRowEnd = Math.min(rows, area.rowEnd + margin);
 
     const horizontalOverlap = (colStart < aColEnd) && (colEnd > aColStart);
     const verticalOverlap = (rowStart < aRowEnd) && (rowEnd > aRowStart);
@@ -409,7 +322,6 @@ function overlapsAnyAreaWithMargin(
   return false;
 }
 
-/** Hide squares within the specified area. */
 function removeSquaresInArea(colStart, colEnd, rowStart, rowEnd, columns) {
   for (let r = rowStart; r < rowEnd; r++) {
     for (let c = colStart; c < colEnd; c++) {
@@ -422,43 +334,124 @@ function removeSquaresInArea(colStart, colEnd, rowStart, rowEnd, columns) {
   }
 }
 
-/** Actually inserts the 5×7 bounding box for the article into the grid. */
-function appendArticle(colStart, rowStart) {
+/**
+ * Insert the 5×7 bounding box for the article,
+ * and fetch custom text from articleTexts[articleIndex].
+ */
+function appendArticle(colStart, rowStart, articleIndex, linkHref) {
+  const articleWidth = 5;
+  const articleHeight = 7;
+
+  // The anchor covers 5 columns × 7 rows in the main grid
+  const articleLink = document.createElement('a');
+  articleLink.href = linkHref || '#';
+  articleLink.classList.add('article-link');
+
+  // Position in the parent grid
+  articleLink.style.gridColumn = `${colStart + 1} / ${colStart + 1 + articleWidth}`;
+  articleLink.style.gridRow = `${rowStart + 1} / ${rowStart + 1 + articleHeight}`;
+
   // Top 5×5 => .article-image
   const imageDiv = document.createElement('div');
   imageDiv.classList.add('article-image');
-  imageDiv.style.gridColumn = `${colStart + 1} / ${colStart + 6}`;
-  imageDiv.style.gridRow = `${rowStart + 1} / ${rowStart + 6}`;
 
-  // Bottom 3×2 => .article-text (left-aligned)
+  // Insert your image
+  const imgElement = document.createElement('img');
+  imgElement.src = `./img_article${articleIndex}.png`;
+  imgElement.style.width = '100%';
+  imgElement.style.height = '100%';
+  imgElement.style.objectFit = 'cover';
+  imageDiv.appendChild(imgElement);
+
+  // Bottom 3×2 => .article-text
   const textDiv = document.createElement('div');
   textDiv.classList.add('article-text');
-  textDiv.textContent = 'Some text here';
-  textDiv.style.gridColumn = `${colStart + 1} / ${colStart + 4}`;
-  textDiv.style.gridRow = `${rowStart + 6} / ${rowStart + 8}`;
 
-  container.appendChild(imageDiv);
-  container.appendChild(textDiv);
+  // ====== 2) Grab the text from our articleTexts object ======
+  // If the index doesn't exist, fallback to a default string
+  const customText = articleTexts[articleIndex] || `Article #${articleIndex}: (No text set)`;
+  textDiv.textContent = customText;
+
+  // Add them to the link
+  articleLink.appendChild(imageDiv);
+  articleLink.appendChild(textDiv);
+
+  // Add link to the container
+  container.appendChild(articleLink);
 }
 
-/** Utility: Returns a random integer between min (inclusive) and max (exclusive). */
+/** Utility: random integer in [min, max). */
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-/** Shuffle array in-place. */
-function shuffleArray(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
+/** Utility: style big letters (s, a, n, d, b, o, x). */
+function styleBigLetter(elem, size) {
+  elem.style.color = '#00AEEF';
+  elem.style.textAlign = 'center';
+  elem.style.fontSize = '33px';
+  elem.style.lineHeight = `${size}px`;
 }
 
-// Create a debounced version of updateGrid with a 200ms delay
-const debouncedUpdateGrid = debounce(updateGrid, 200);
+/* ----- Custom Cursor Functionality ----- */
 
-// Listen for resize events and apply the debounced update
-window.addEventListener('resize', debouncedUpdateGrid);
+document.addEventListener('DOMContentLoaded', () => {
+  const cursor = document.querySelector('.custom-cursor');
+  const grid = document.querySelector('.grid-container');
 
-// Initialize the grid on page load
-updateGrid();
+  if (!cursor || !grid) {
+    console.warn('Custom cursor or grid container not found.');
+    return;
+  }
+
+  // Function to update cursor position
+  const moveCursor = (e) => {
+    const gridRect = grid.getBoundingClientRect();
+    const isInsideGrid = (
+      e.clientX >= gridRect.left &&
+      e.clientX <= gridRect.right &&
+      e.clientY >= gridRect.top &&
+      e.clientY <= gridRect.bottom
+    );
+
+    if (isInsideGrid) {
+      cursor.style.display = 'block';
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
+    } else {
+      cursor.style.display = 'none';
+    }
+  };
+
+  // Attach mousemove event to document
+  document.addEventListener('mousemove', moveCursor);
+
+  // Select all article links
+  const articleLinks = document.querySelectorAll('.article-link');
+
+  // Function to enlarge cursor
+  const enlargeCursor = () => {
+    cursor.classList.add('enlarged');
+  };
+
+  // Function to reset cursor size
+  const resetCursor = () => {
+    cursor.classList.remove('enlarged');
+  };
+
+  // Attach hover events to each article link
+  articleLinks.forEach(link => {
+    link.addEventListener('mouseenter', enlargeCursor);
+    link.addEventListener('mouseleave', resetCursor);
+  });
+
+  // Hide default cursor when inside the grid
+  grid.addEventListener('mouseenter', () => {
+    document.body.style.cursor = 'none';
+  });
+
+  grid.addEventListener('mouseleave', () => {
+    document.body.style.cursor = 'default';
+  });
+});
+
