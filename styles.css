@@ -54,9 +54,83 @@ nav a.current-page {
 /* Main content styles */
 .main-content {
   margin-top: 100px; /* To avoid overlap with fixed nav */
-  text-align: center;
+  text-align: center; /* Center the text within the container */
   color: black;
   padding: 20px;
+
+  /* Center the main-content container with a max width */
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Main Heading Styling */
+.main-content h1 {
+  font-size: 50px;
+  margin-bottom: 20px;
+  color: black;
+  text-align: left;
+}
+
+/* Section Styling */
+.main-content section {
+  margin-bottom: 40px;
+  padding-left: 0;
+  border-left: none;
+}
+
+/* Section Headings Styling */
+.main-content section h2 {
+  font-size: 1.75em;
+  line-height: 1.6;
+  text-align: left;
+  max-width: 1500px;
+  text-transform: lowercase;
+  margin: 0 auto -5px auto; 
+  color: #444444;
+}
+
+/* Paragraph Styling */
+.main-content p {
+  font-size: 0.95em;
+  font-weight: 50;
+  line-height: 1.6;
+  text-align: left;
+  max-width: 1500px;
+  margin: 0 auto 20px auto;
+  color: #444444;
+}
+
+/* -- ADD THIS OVERRIDE AFTER .main-content p -- */
+/* Make the entire mission statement white */
+.mission-statement,
+.mission-statement h2,
+.mission-statement p {
+  color: #F8F6ED !important;
+}
+
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .main-content p {
+    font-size: 1em;
+    padding: 0 10px;
+    margin: 0 auto 15px auto;
+  }
+
+  .main-content h1 {
+    font-size: 2em;
+  }
+
+  .main-content section h2 {
+    font-size: 1.5em;
+  }
+
+  .main-content section {
+    padding-left: 0;
+    border-left: none;
+  }
 }
 
 /* Work in Progress styles */
@@ -65,19 +139,19 @@ nav a.current-page {
   padding: 40px;
   margin: 40px auto;
   max-width: 600px;
-  background-image: url('under_construction_sand.png'); /* Corrected syntax */
-  background-repeat: repeat; /* Prevents the image from repeating */
-  background-position: center; /* Centers the image within the div */
-  background-size: contain; /* Scales the image to fit within the div */
+  background-image: url('under_construction_sand.png');
+  background-repeat: repeat;
+  background-position: center;
+  background-size: contain;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: #fff; /* Optional: Set a background color for contrast */
+  background-color: #fff;
 }
 
 .work-in-progress h2 {
   margin-top: 0;
   font-style: italic;
   font-size: 2em;
-  color: #00AEEF; /* Optional: Highlight color for the header */
+  color: #00AEEF;
 }
 
 .work-in-progress p {
@@ -87,23 +161,22 @@ nav a.current-page {
 
 /* Grid overlay styles */
 .grid-overlay {
-  position: relative; /* To position pyramids absolutely within this container */
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   width: 100vw;
-  padding: 100px 0; /* Space around the grid */
+  padding: 100px 0;
 }
 
-/* Pyramids Container Styles */
 .pyramids-container {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Allows clicks to pass through to underlying elements */
-  z-index: -1; /* Positioned above the grid but below articles */
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Yellow Pyramid Styles */
@@ -115,11 +188,10 @@ nav a.current-page {
   border-left: 200px solid rgb(255, 247, 0);
   transform: rotate(180deg);
   position: absolute;
-  opacity: 0.3; /* Default opacity */
+  opacity: 0.3;
   z-index: -1;
 }
 
-/* Specific Opacity and Position for Each Pyramid */
 .pyramid1 {
   opacity: 0.3;
   top: 30%;
@@ -140,21 +212,20 @@ nav a.current-page {
 
 /* Each grid square styles */
 .grid-square {
-  background-size: cover; 
-  background-position: center; 
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   border: 0.5px solid #00AEEF;
   box-sizing: border-box;
   text-align: center;
-  line-height: 50px; 
+  line-height: 50px;
   font-size: 18px;
-  position: relative; /* For absolutely positioned children */
-  z-index: 0; /* Ensure grid squares are below pyramids */
+  position: relative;
+  z-index: 0;
 }
 
-/* Hidden squares */
 .grid-square.hidden {
-  display: none; 
+  display: none;
 }
 
 /* Grid container styles */
@@ -162,9 +233,9 @@ nav a.current-page {
   position: relative;
   display: grid;
   width: 80%;
-  grid-auto-rows: 50px; /* Each row is 50px tall */
+  grid-auto-rows: 50px;
   margin-bottom: 0;
-  z-index: 0; /* Ensure grid is below pyramids */
+  z-index: 0;
 }
 
 /* The "image" portion (top 5x5) */
@@ -172,21 +243,21 @@ nav a.current-page {
   background-image: url("https://via.placeholder.com/400x400");
   background-size: cover;
   background-position: center;
-  z-index: 2; 
+  z-index: 2;
 }
 
 /* The bottom 3×2 region for the article text */
 .article-text {
   font-size: large;
-  grid-column: 1 / 4; /* columns 1..3 => 3 columns wide */
-  grid-row: 6 / 8;    /* rows 6..7 => 2 rows tall */
+  grid-column: 1 / 4;
+  grid-row: 6 / 8;
   color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 0.5rem;
-  z-index: 3; /* Ensure text is above pyramids */
+  z-index: 3;
 }
 
 /* Blank space underneath the grid */
@@ -205,19 +276,157 @@ nav a.current-page {
 
 /* The anchor that wraps each article bounding box */
 .article-link {
-  border: 1px solid #00AEEF; 
-  box-sizing: border-box;  /* ensures padding doesn't expand the box */
+  border: 1px solid #00AEEF;
+  box-sizing: border-box;
   display: block;
   position: relative;
   background-color: #F8F6ED;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
-  text-decoration: none; 
+  text-decoration: none;
   color: inherit;
-  z-index: 600; /* Higher than pyramids */
+  z-index: 600;
 }
 
-/* Hover effect (glow + slight scale) */
 .article-link:hover {
   box-shadow: 0 0 10px #00AEEF;
   transform: scale(1.03);
+}
+
+/* Parent container for the two-column layout */
+.two-column-layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Individual column styles */
+.column {
+  flex: 1;
+  min-width: 300px;
+  max-width: 600px;
+  padding: 30px;
+}
+
+/* NEW: Background color on left column to contrast white text */
+.column:first-child {
+  background-color: black;
+  margin-right: 0px; /* Increase right margin on left column */
+}
+
+.column:last-child {
+  margin-left: 0px;  /* Increase left margin on right column */
+}
+
+@media (max-width: 1200px) {
+  .column:first-child {
+    margin-right: 0px; /* Smaller margin */
+  }
+}
+
+/* When the screen is 768px or narrower, reduce further */
+@media (max-width: 768px) {
+  .column:first-child {
+    margin-right: 0px; /* Even smaller margin */
+  }
+}
+
+/* OPTIONAL: If you want a special style for your link section */
+.contact-links p {
+  margin-bottom: 10px;
+}
+
+.contact-links a {
+  color: #00AEEF;
+  text-decoration: underline;
+}
+
+/* Main content wrapper */
+.main-content {
+  margin: 100px auto;
+  max-width: 1200px;
+  padding: 20px;
+  color: black;
+}
+
+/* Main Heading Styling */
+.main-content h1 {
+  font-size: 50px;
+  margin-bottom: 20px;
+  color: black;
+  text-align: left;
+}
+
+/* Container to place square + sub-heading side by side */
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+/* Sub-heading in the title-container */
+.title-container h1 {
+  margin: 0;
+  line-height: 1;
+  font-size: 2.5em;
+}
+
+/* The square: sized in em to scale with the sub-heading */
+.square {
+  margin-left: 0px;
+  position: relative;
+  width: 2.3em;
+  height: 2.3em;
+  border: 1px solid black;
+  background-image: url("black_sand.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Diagonal black region from top-left to bottom-right */
+.square::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  background-color: black;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%);
+}
+
+/* Bottom section container */
+.bottom-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin-top: 100px;
+  color: black;
+}
+
+/* Left column text in the footer */
+.left-column p {
+  margin: 0 0 10px 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Right column (for your social icon or anything else) */
+.right-column a {
+  text-decoration: none;
+  color: inherit;
+  font-size: 1rem;
+}
+
+.right-column img {
+  width: 24px;
+  height: auto;
+  display: inline-block;
+}
+
+.audience {
+  margin-bottom: 60px; /* Increase to desired distance */
 }
