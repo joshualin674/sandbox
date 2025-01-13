@@ -75,7 +75,6 @@ nav a.current-page {
 /* Section Styling */
 .main-content section {
   margin-bottom: 40px;
-  padding-left: 0;
   border-left: none;
 }
 
@@ -86,8 +85,6 @@ nav a.current-page {
   text-align: left;
   max-width: 1500px;
   text-transform: lowercase;
-  margin: 0 auto -5px auto; 
-  color: #444444;
 }
 
 /* Paragraph Styling */
@@ -98,7 +95,6 @@ nav a.current-page {
   text-align: left;
   max-width: 1500px;
   margin: 0 auto 20px auto;
-  color: #444444;
 }
 
 /* -- ADD THIS OVERRIDE AFTER .main-content p -- */
@@ -128,7 +124,7 @@ nav a.current-page {
   }
 
   .main-content section {
-    padding-left: 0;
+    padding-left: 0px;
     border-left: none;
   }
 }
@@ -157,6 +153,7 @@ nav a.current-page {
 .work-in-progress p {
   font-size: 1.2em;
   color: #00afefd9;
+  text-align: center;
 }
 
 /* Grid overlay styles */
@@ -314,6 +311,7 @@ nav a.current-page {
 }
 
 .column:last-child {
+  border: 1px solid black;
   margin-left: 0px;  /* Increase left margin on right column */
 }
 
@@ -402,7 +400,6 @@ nav a.current-page {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
   margin-top: 100px;
   color: black;
 }
@@ -414,7 +411,6 @@ nav a.current-page {
   line-height: 1.4;
 }
 
-/* Right column (for your social icon or anything else) */
 .right-column a {
   text-decoration: none;
   color: inherit;
@@ -428,5 +424,106 @@ nav a.current-page {
 }
 
 .audience {
-  margin-bottom: 60px; /* Increase to desired distance */
+  margin-bottom: 60px;
+}
+
+
+.submissions p {
+  color: black;
+}
+
+
+.categories {
+  background-color: black;
+  color: white;
+  padding: 30px; /* Adds inner spacing around the text */
+  margin-bottom: 40px; /* Space after the black section */
+  text-align: left; /* Align text to the left */
+}
+
+/* Ensure all text elements inside .categories are white */
+.categories h2,
+.categories p,
+.categories ul,
+.categories li {
+  color: white;
+}
+
+.categories ul,
+.categories li {
+  margin-left: 1em; /* Optional indentation for bullets */
+}
+
+/* New Styles for Categories Layout */
+.categories-container {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap to the next line if necessary */
+  gap: 20px; /* Space between category items */
+}
+
+.category-item {
+  flex: 1 1 300px; /* Flex-grow, flex-shrink, flex-basis */
+  padding: 20px;
+  text-align: left;
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effects */
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .categories-container {
+    flex-direction: column; /* Stack items vertically on medium screens */
+  }
+}
+
+@media (min-width: 1025px) {
+  .categories-container {
+    flex-direction: row; /* Arrange items horizontally on large screens */
+  }
+}
+
+/* Additional Styles for Aesthetics */
+.category-item p,
+.category-item ul {
+  font-size: 1em; /* Adjust as needed */
+  line-height: 1.5;
+}
+
+.category-item ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.category-item p {
+  margin-bottom: 10px;
+}
+
+.category-item ul {
+  margin-bottom: 15px;
+}
+
+
+.mission-statement h2 {
+  margin: 0 auto -5px auto;
+}
+
+.audience h2 {
+  margin: 0 auto -5px auto;
+}
+
+.interfaces h2 {
+  margin: 0 auto -5px auto;
+}
+
+.protocol h2 {
+  margin: 0 auto 10px auto;
+}
+
+.categories h2 {
+  margin: 0 auto 10px 15px;
+}
+
+.submissions p {
+  margin-top: 20px;
 }
