@@ -433,15 +433,15 @@ nav a.current-page {
 }
 
 
+/* Categories Section */
 .categories {
   background-color: black;
   color: white;
-  padding: 30px; /* Adds inner spacing around the text */
-  margin-bottom: 40px; /* Space after the black section */
-  text-align: left; /* Align text to the left */
+  padding: 30px;
+  margin-bottom: 40px;
+  text-align: left;
 }
 
-/* Ensure all text elements inside .categories are white */
 .categories h2,
 .categories p,
 .categories ul,
@@ -449,45 +449,27 @@ nav a.current-page {
   color: white;
 }
 
-.categories ul,
-.categories li {
-  margin-left: 1em; /* Optional indentation for bullets */
-}
-
-/* New Styles for Categories Layout */
 .categories-container {
-  display: flex;
-  flex-wrap: wrap; /* Allows items to wrap to the next line if necessary */
-  gap: 20px; /* Space between category items */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
 }
 
 .category-item {
-  flex: 1 1 300px; /* Flex-grow, flex-shrink, flex-basis */
   padding: 20px;
-  text-align: left;
-  box-sizing: border-box; /* Ensure padding doesn't affect width */
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effects */
+  background-color: #000000;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 
-/* Responsive Adjustments */
-@media (max-width: 1024px) {
-  .categories-container {
-    flex-direction: column; /* Stack items vertically on medium screens */
-  }
-}
-
-@media (min-width: 1025px) {
-  .categories-container {
-    flex-direction: row; /* Arrange items horizontally on large screens */
-  }
-}
-
-/* Additional Styles for Aesthetics */
 .category-item p,
 .category-item ul {
-  font-size: 1em; /* Adjust as needed */
+  font-size: 1em;
   line-height: 1.5;
+  margin-bottom: 15px;
 }
 
 .category-item ul {
@@ -495,12 +477,19 @@ nav a.current-page {
   padding-left: 20px;
 }
 
-.category-item p {
-  margin-bottom: 10px;
-}
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .categories-container {
+    grid-template-columns: 1fr;
+  }
 
-.category-item ul {
-  margin-bottom: 15px;
+  .main-content h1 {
+    font-size: 2em;
+  }
+
+  .main-content p {
+    font-size: 1em;
+  }
 }
 
 
@@ -521,7 +510,7 @@ nav a.current-page {
 }
 
 .categories h2 {
-  margin: 0 auto 10px 15px;
+  margin: 0 auto 5px 35px;
 }
 
 .submissions p {
