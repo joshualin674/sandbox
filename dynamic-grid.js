@@ -16,9 +16,9 @@ window.addEventListener('resize', () => {
 
 // ====== 1) Article Texts: Add or change them here ======
 const articleTexts = {
-  1: "Article 1 content goes here...by Whomever Wrote Article 1",
-  2: "Hi from Article 2...by Article 2 Writer",
-  3: "Article 3 content...by Whomever Wrote It",
+  1: " ",
+  2: " ",
+  3: " ",
   // ... add more articles as needed ...
 };
 // Initial call
@@ -44,6 +44,7 @@ function updateGrid() {
   } else {
     baseRows = 30 + 4;
   }
+
 
   const totalSquares = baseRows * columns;
   const rows = baseRows;
@@ -158,11 +159,11 @@ function createHorizontalArticles(columns, rows) {
 
   let row2Min = 2;
   let row2Max = Math.max(row2Min, rows - articleHeight);
-  let rowStart2 = randomInt(row2Min, row2Max + 1);
+  let rowStart2 = randomInt(row2Min, row2Max);
 
   let row3Min = 2;
   let row3Max = Math.max(row3Min, rows - articleHeight);
-  let rowStart3 = randomInt(row3Min, row3Max + 1);
+  let rowStart3 = randomInt(row3Min, row3Max);
 
   // Article #1 => some-article1.html
   removeSquaresInArea(col1, col1 + articleWidth, rowStart1, rowStart1 + articleHeight, columns);
@@ -334,6 +335,52 @@ function removeSquaresInArea(colStart, colEnd, rowStart, rowEnd, columns) {
   }
 }
 
+// /**
+//  * Insert the 5×7 bounding box for the article,
+//  * and fetch custom text from articleTexts[articleIndex].
+//  */
+// function appendArticle(colStart, rowStart, articleIndex, linkHref) {
+//   const articleWidth = 5;
+//   const articleHeight = 7;
+
+//   // The anchor covers 5 columns × 7 rows in the main grid
+//   const articleLink = document.createElement('a');
+//   articleLink.href = linkHref || '#';
+//   articleLink.classList.add('article-link');
+
+//   // Position in the parent grid
+//   articleLink.style.gridColumn = `${colStart + 1} / ${colStart + 1 + articleWidth}`;
+//   articleLink.style.gridRow = `${rowStart + 1} / ${rowStart + 1 + articleHeight}`;
+
+//   // Top 5×5 => .article-image
+//   const imageDiv = document.createElement('div');
+//   imageDiv.classList.add('article-image');
+
+//   // Insert your image
+//   const imgElement = document.createElement('img');
+//   imgElement.src = `./img_article${articleIndex}.png`;
+//   imgElement.style.width = '100%';
+//   imgElement.style.height = '100%';
+//   imgElement.style.objectFit = 'cover';
+//   imageDiv.appendChild(imgElement);
+
+//   // Bottom 3×2 => .article-text
+//   const textDiv = document.createElement('div');
+//   textDiv.classList.add('article-text');
+
+//   // ====== 2) Grab the text from our articleTexts object ======
+//   // If the index doesn't exist, fallback to a default string
+//   const customText = articleTexts[articleIndex] || `Article #${articleIndex}: (No text set)`;
+//   textDiv.textContent = customText;
+
+//   // Add them to the link
+//   articleLink.appendChild(imageDiv);
+//   articleLink.appendChild(textDiv);
+
+//   // Add link to the container
+//   container.appendChild(articleLink);
+// }
+
 /**
  * Insert the 5×7 bounding box for the article,
  * and fetch custom text from articleTexts[articleIndex].
@@ -344,7 +391,7 @@ function appendArticle(colStart, rowStart, articleIndex, linkHref) {
 
   // The anchor covers 5 columns × 7 rows in the main grid
   const articleLink = document.createElement('a');
-  articleLink.href = linkHref || '#';
+  articleLink.href = 'about.html'; // Redirect all articles to about.html
   articleLink.classList.add('article-link');
 
   // Position in the parent grid
@@ -379,6 +426,8 @@ function appendArticle(colStart, rowStart, articleIndex, linkHref) {
   // Add link to the container
   container.appendChild(articleLink);
 }
+
+
 
 /** Utility: random integer in [min, max). */
 function randomInt(min, max) {
