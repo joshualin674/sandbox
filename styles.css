@@ -51,6 +51,22 @@ nav a.current-page {
   text-decoration: underline;
 }
 
+/* Define the Neue Haas Display Thin font */
+@font-face {
+  font-family: 'NeueHaasDisplayRoman';
+  src: url('./fonts/NeueHaasDisplayRoman.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Define the Neue Haas Display Black font */
+@font-face {
+  font-family: 'NeueHaasDisplayMedium';
+  src: url('./fonts/NeueHaasDisplayMedium.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 /* Main content styles */
 .main-content {
   margin-top: 100px; /* To avoid overlap with fixed nav */
@@ -66,6 +82,7 @@ nav a.current-page {
 
 /* Main Heading Styling */
 .main-content h1 {
+  font-family: 'NeueHaasDisplayMedium', Arial, sans-serif;
   font-size: 50px;
   margin-bottom: 20px;
   color: black;
@@ -80,6 +97,7 @@ nav a.current-page {
 
 /* Section Headings Styling */
 .main-content section h2 {
+  font-family: 'NeueHaasDisplayMedium', Arial, sans-serif;
   font-size: 1.75em;
   line-height: 1.6;
   text-align: left;
@@ -87,8 +105,9 @@ nav a.current-page {
   text-transform: lowercase;
 }
 
-/* Paragraph Styling */
+/* Section Paragraph Styling */
 .main-content p {
+  font-family: 'NeueHaasDisplayRoman', Arial, sans-serif;
   font-size: 0.95em;
   font-weight: 50;
   line-height: 1.6;
@@ -97,8 +116,7 @@ nav a.current-page {
   margin: 0 auto 20px auto;
 }
 
-/* -- ADD THIS OVERRIDE AFTER .main-content p -- */
-/* Make the entire mission statement white */
+
 .mission-statement,
 .mission-statement h2,
 .mission-statement p {
@@ -144,8 +162,8 @@ nav a.current-page {
 }
 
 .work-in-progress h2 {
+  font-family: 'NeueHaasDisplayMedium', Arial, sans-serif;
   margin-top: 0;
-  font-style: italic;
   font-size: 2em;
   color: #00AEEF;
 }
@@ -273,7 +291,6 @@ nav a.current-page {
 
 /* The anchor that wraps each article bounding box */
 .article-link {
-  border: 1px solid #00AEEF;
   box-sizing: border-box;
   display: block;
   position: relative;
@@ -285,8 +302,7 @@ nav a.current-page {
 }
 
 .article-link:hover {
-  box-shadow: 0 0 10px #00AEEF;
-  transform: scale(1.03);
+  transform: scale(1.1);
 }
 
 /* Parent container for the two-column layout */
@@ -440,6 +456,7 @@ nav a.current-page {
   padding: 30px;
   margin-bottom: 40px;
   text-align: left;
+  font-family: 'NeueHaasDisplayRoman', Arial, sans-serif;
 }
 
 .categories h2,
